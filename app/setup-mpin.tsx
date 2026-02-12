@@ -3,30 +3,30 @@ import {
   View,
   Text,
   TextInput,
-  StyleSheet,
   TouchableOpacity,
-  Dimensions,
+  StyleSheet,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 
-const { width } = Dimensions.get("window");
-
-export default function SetupMPIN() {
+export default function SetMPIN() {
   const router = useRouter();
   const [mpin, setMpin] = useState("");
+  const [confirmMpin, setConfirmMpin] = useState("");
 
-  const handleComplete = () => {
-    if (mpin.length !== 4) {
-      alert("Please enter 4-digit MPIN");
+  const handleSave = () => {
+    if (!mpin || !confirmMpin) {
+      alert("Please fill both fields");
       return;
     }
 
-    // Move to confirm page
-    router.push({
-      pathname: "/confirm-mpin",
-      params: { mpin },
-    });
+    if (mpin !== confirmMpin) {
+      alert("MPIN does not match");
+      return;
+    }
+
+    alert("MPIN Saved Successfully");
+    router.replace("/");
   };
 
   return (
@@ -34,57 +34,45 @@ export default function SetupMPIN() {
       colors={["#3B82F6", "#7C3AED"]}
       style={styles.container}
     >
-      {/* Top Section */}
-      <Text style={styles.heading}>Setup MPIN</Text>
-      <Text style={styles.subheading}>
-        Create a secure 4-digit MPIN for quick access
-      </Text>
-
-      {/* White Card */}
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Set Your MPIN</Text>
-        <Text style={styles.cardSub}>
-          Enter your MPIN below
-        </Text>
+        {/* Centered Title Section */}
+        <Text style={styles.title}>Set MPIN</Text>
+        <Text style={styles.subtitle}>Secure your account</Text>
+        <Text style={styles.note}>MPIN must be 4 or 6 digits</Text>
 
+        {/* Enter MPIN */}
         <TextInput
           style={styles.input}
-          keyboardType="number-pad"
-          maxLength={4}
+          placeholder="Enter MPIN"
+          placeholderTextColor="#9CA3AF"
           secureTextEntry
+          keyboardType="number-pad"
+          maxLength={6}
           value={mpin}
           onChangeText={setMpin}
-          placeholder="••••"
-          placeholderTextColor="#aaa"
         />
 
-        {/* Complete Button */}
-        <TouchableOpacity
-          style={styles.completeBtn}
-          onPress={handleComplete}
-        >
-          <Text style={styles.completeText}>
-            Complete Setup
-          </Text>
+        {/* Confirm MPIN */}
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm MPIN"
+          placeholderTextColor="#9CA3AF"
+          secureTextEntry
+          keyboardType="number-pad"
+          maxLength={6}
+          value={confirmMpin}
+          onChangeText={setConfirmMpin}
+        />
+
+        {/* Save Button */}
+        <TouchableOpacity style={styles.button} onPress={handleSave}>
+          <Text style={styles.buttonText}>SAVE MPIN</Text>
         </TouchableOpacity>
 
-        {/* Back Button */}
-        <TouchableOpacity
-          style={styles.backBtn}
-          onPress={() => router.back()}
-        >
-          <Text style={styles.backText}>Back</Text>
+        {/* Back */}
+        <TouchableOpacity onPress={() => router.replace("/")}>
+          <Text style={styles.backText}>Back to Login</Text>
         </TouchableOpacity>
-
-        {/* Security Card */}
-        <View style={styles.securityCard}>
-          <Text style={styles.securityTitle}>
-            Security Tips:
-          </Text>
-          <Text>• Avoid simple numbers like 1234</Text>
-          <Text>• Don’t share your MPIN</Text>
-          <Text>• Use something unique</Text>
-        </View>
       </View>
     </LinearGradient>
   );
@@ -93,71 +81,65 @@ export default function SetupMPIN() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    paddingTop: 90,
   },
-  heading: {
-    color: "white",
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  subheading: {
-    color: "white",
-    marginBottom: 25,
-  },
+
   card: {
-    width: width * 0.75,
-    backgroundColor: "white",
+    width: "85%",
+    backgroundColor: "#fff",
     borderRadius: 20,
     padding: 25,
+    elevation: 5,
   },
-  cardTitle: {
-    fontSize: 18,
+
+  title: {
+    fontSize: 22,
     fontWeight: "bold",
     textAlign: "center",
-  },
-  cardSub: {
-    textAlign: "center",
-    color: "#555",
-    marginBottom: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 10,
-    padding: 14,
-    textAlign: "center",
-    fontSize: 20,
-    marginBottom: 20,
-  },
-  completeBtn: {
-    backgroundColor: "green",
-    paddingVertical: 12,
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  completeText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  backBtn: {
-    backgroundColor: "#f2f2f2",
-    paddingVertical: 12,
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  backText: {
-    fontWeight: "bold",
-  },
-  securityCard: {
-    backgroundColor: "#FFF3CD",
-    padding: 12,
-    borderRadius: 10,
-  },
-  securityTitle: {
-    fontWeight: "bold",
     marginBottom: 5,
+  },
+
+  subtitle: {
+    textAlign: "center",
+    color: "#6B7280",
+    marginBottom: 5,
+  },
+
+  note: {
+    textAlign: "center",
+    color: "#9CA3AF",
+    fontSize: 13,
+    marginBottom: 20,
+  },
+
+  input: {
+    height: 48,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    marginBottom: 15,
+    backgroundColor: "#F9FAFB",
+  },
+
+  button: {
+    backgroundColor: "#3B82F6",
+    height: 48,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 5,
+  },
+
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+  },
+
+  backText: {
+    textAlign: "center",
+    marginTop: 15,
+    color: "#374151",
   },
 });

@@ -7,19 +7,20 @@ import {
   StyleSheet,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
-export default function OTP() {
+export default function ForgotMPIN() {
   const router = useRouter();
-  const [otp, setOtp] = useState("");
+  const [phone, setPhone] = useState("");
 
-  const handleVerify = () => {
-    if (otp.length === 4) {
-      router.push("/setup-mpin");
-    } else {
-      alert("Enter 4-digit OTP");
+  const handleSendOtp = () => {
+    if (!phone) {
+      alert("Please enter registered mobile number");
+      return;
     }
+
+    router.push("/otp");
   };
 
   return (
@@ -28,49 +29,36 @@ export default function OTP() {
       style={styles.container}
     >
       <View style={styles.card}>
-        {/* Icon */}
-        <View style={styles.iconContainer}>
-          <Ionicons
-            name="shield-checkmark-outline"
-            size={40}
-            color="#3B82F6"
-          />
-        </View>
-
-        <Text style={styles.title}>OTP Verification</Text>
+        <Text style={styles.title}>Forgot MPIN</Text>
         <Text style={styles.subtitle}>
-          Enter the OTP sent to your mobile number
+          Enter your registered mobile number to receive OTP
         </Text>
 
-        {/* OTP Input */}
+        {/* Label */}
+        <Text style={styles.label}>Registered Mobile Number</Text>
+
+        {/* Input with Icon */}
         <View style={styles.inputContainer}>
+          <Ionicons name="call-outline" size={20} color="#888" />
           <TextInput
-            placeholder="Enter OTP"
-            keyboardType="number-pad"
-            maxLength={4}
-            value={otp}
-            onChangeText={setOtp}
+            placeholder="Enter mobile number"
+            keyboardType="phone-pad"
             style={styles.input}
+            value={phone}
+            onChangeText={setPhone}
           />
         </View>
 
-        {/* Verify Button */}
+        {/* Button */}
         <TouchableOpacity
           style={styles.button}
-          onPress={handleVerify}
+          onPress={handleSendOtp}
         >
-          <Text style={styles.buttonText}>VERIFY OTP</Text>
+          <Text style={styles.buttonText}>Send OTP</Text>
         </TouchableOpacity>
 
-        {/* Resend */}
-        <TouchableOpacity>
-          <Text style={styles.link}>RESEND OTP</Text>
-        </TouchableOpacity>
-
-        {/* Back */}
-        <TouchableOpacity
-          onPress={() => router.replace("/")}
-        >
+        {/* Back Link */}
+        <TouchableOpacity onPress={() => router.replace("/")}>
           <Text style={styles.backLink}>Back to Login</Text>
         </TouchableOpacity>
       </View>
@@ -91,17 +79,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 25,
     elevation: 5,
-    alignItems: "center",
-  },
-
-  iconContainer: {
-    marginBottom: 15,
   },
 
   title: {
     fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 5,
+    textAlign: "center",
+    marginBottom: 8,
   },
 
   subtitle: {
@@ -111,24 +95,29 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
+  label: {
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 6,
+    color: "#333",
+  },
+
   inputContainer: {
-    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "#F3F4F6",
     borderRadius: 12,
-    height: 45,
-    justifyContent: "center",
     paddingHorizontal: 12,
+    height: 45,
     marginBottom: 20,
   },
 
   input: {
-    textAlign: "center",
-    fontSize: 18,
-    letterSpacing: 5,
+    flex: 1,
+    marginLeft: 8,
   },
 
   button: {
-    width: "100%",
     backgroundColor: "#3B82F6",
     height: 45,
     borderRadius: 12,
@@ -142,13 +131,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  link: {
-    color: "#3B82F6",
-    fontWeight: "500",
-    marginBottom: 8,
-  },
-
   backLink: {
-    color: "#6B7280",
+    textAlign: "center",
+    color: "#3B82F6",
+    marginTop: 5,
   },
 });
